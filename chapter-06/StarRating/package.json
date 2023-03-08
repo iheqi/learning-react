@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --mode development",
     "prestart": "npm run build",
-    "start": "serve ./dist"
+    "start": "serve ./dist -l 5000"
   },
   "repository": {
     "type": "git",

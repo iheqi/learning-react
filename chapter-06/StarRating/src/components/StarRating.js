@@ -7,7 +7,7 @@ const Star = ({ selected = false, onSelect = f => f }) => (
 
 const createArray = (length) => [...Array(length)];
 
-export default function StarRating({ totalStars = 5, selectedStars = 0 }) {
+export default function StarRating({ totalStars = 5, selectedStars = 0, onRate = f => f }) {
   // const [selectedStars, setSelectedStars] = useState(0);
 
   return (
@@ -17,7 +17,7 @@ export default function StarRating({ totalStars = 5, selectedStars = 0 }) {
           < Star
             key={i}
             selected={selectedStars > i}
-            onSelect={() => setSelectedStars(i + 1)}
+            onSelect={() => onRate(i + 1)}
           />
         )
       }
