@@ -1,5 +1,6 @@
 import React from "react";
 import Recipe from "./Recipe";
+import StarRating from "./StarRating";
 import "./Menu.css";
 
 export default function Menu({ recipes = [] }) {
@@ -7,6 +8,7 @@ export default function Menu({ recipes = [] }) {
     <article>
       <header>
         <h1>Delicious Recipes</h1>
+        <StarRating />
       </header>
       <div className="recipes">
         {recipes.map((props, i) => (
