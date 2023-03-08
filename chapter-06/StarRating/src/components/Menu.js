@@ -8,8 +8,10 @@ export default function Menu({ recipes = [] }) {
     <article>
       <header>
         <h1>Delicious Recipes</h1>
-        <StarRating />
       </header>
+
+      <StarRating />
+
       <div className="recipes">
         {recipes.map((props, i) => (
           <Recipe key={i} {...props} />
