@@ -7,8 +7,8 @@ const Star = ({ selected = false, onSelect = f => f }) => (
 
 const createArray = (length) => [...Array(length)];
 
-export default function StarRating({ totalStars = 5 }) {
-  const [selectedStars, setSelectedStars] = useState(0);
+export default function StarRating({ totalStars = 5, selectedStars = 0 }) {
+  // const [selectedStars, setSelectedStars] = useState(0);
 
   return (
     <>

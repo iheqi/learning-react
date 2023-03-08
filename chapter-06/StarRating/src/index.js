@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import data from "../data/recipes.json";
-import Menu from "./components/Menu";
+// import recipesData from "../data/recipes.json";
+// import Menu from "./components/Menu";
+import App from "./App";
 
-ReactDOM.render(<Menu recipes={data} />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
