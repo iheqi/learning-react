@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import WordCount from "./components/WordCount";
 
 function App() {
   const [val, set] = useState("");
@@ -41,6 +42,8 @@ function App() {
       />
 
       <button onClick={createPhrase}>send</button>
+
+      <WordCount>You are not going to believe this but...</WordCount>
     </div>
   );
 }
