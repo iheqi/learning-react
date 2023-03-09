@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import WordCount from "./components/WordCount";
+import User from "./components/User";
 
 function App() {
   const [val, set] = useState("");
@@ -10,27 +11,27 @@ function App() {
     set("");
   }
 
-  useEffect(() => {
-    console.log(`typing val: ${val}`);
-  }, [val]);
-  useEffect(() => {
-    console.log(`saved phrase: ${phrase}`);
-  }, [phrase]);
+  // useEffect(() => {
+  //   console.log(`typing val: ${val}`);
+  // }, [val]);
+  // useEffect(() => {
+  //   console.log(`saved phrase: ${phrase}`);
+  // }, [phrase]);
 
-  useEffect(() => {
-    console.log('either val or phrase has changed');
-  }, [val, phrase]);
+  // useEffect(() => {
+  //   console.log('either val or phrase has changed');
+  // }, [val, phrase]);
 
-  useEffect(() => {
-    console.log('only once after initial render');
-  }, []);
+  // useEffect(() => {
+  //   console.log('only once after initial render');
+  // }, []);
 
 
-  useEffect(() => {
-    return () => {
-      console.log("Goodbye!");
-    }
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     console.log("Goodbye!");
+  //   }
+  // }, []);
 
   return (
     <div className="App">
@@ -44,6 +45,8 @@ function App() {
       <button onClick={createPhrase}>send</button>
 
       <WordCount>You are not going to believe this but...</WordCount>
+
+      <User></User>
     </div>
   );
 }
