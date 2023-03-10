@@ -1,6 +1,8 @@
 import React from "react";
 import { UserRepositories } from "./UserRepositories";
 import { Fetch } from "./Fetch";
+import SiteLayout from "./components/SiteLayout";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function UserDetails({ data }) {
   return (
@@ -27,6 +29,36 @@ function GitHubUser({ login }) {
   );
 }
 
+
+function ErrorScreen({ error }) {
+  return (
+    <div className="error">
+      <h3>We are sorry...</h3>
+      <p>We cannot process your request at this moment.</p>
+      <p>ERROR: {error.message}</p>
+    </div>
+  )
+}
+
+const BreakThings = () => {
+  throw new Error("报错啦")
+}
+
 export default function App() {
-  return <GitHubUser login="moonhighway" />;
+  // return <GitHubUser login="moonhighway" />;
+  return <SiteLayout menu={
+    <ErrorBoundary fallback={ErrorScreen}>
+      <p>Site Layout</p>
+      <BreakThings></BreakThings>
+    </ErrorBoundary>
+  }>
+    <>
+      <h2>
+        h2
+      </h2>
+
+      <h1>Contents</h1>
+      <p>This is the main part of the example layout</p>
+    </>
+  </SiteLayout>
 }
