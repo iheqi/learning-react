@@ -6,7 +6,8 @@ import {
   About,
   Events,
   Products,
-  Contact
+  Contact,
+  Whoop404
 } from './pages'
 
 
@@ -38,6 +39,11 @@ function App() {
           path="/contact"
           element={<Contact />}
         ></Route>
+        <Route
+          path="*"
+          element={<Whoop404 />}
+        ></Route>
+
       </Routes>
     </div>
   );
