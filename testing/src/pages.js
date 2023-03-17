@@ -6,9 +6,9 @@ export function Home() {
     <div>
       <h1>[Company Website]</h1>
       <nav>
-        <Link to="about">about</Link>
-        <Link to="events">events</Link>
-        <Link to="products">products</Link>
+        <Link to="about">about</Link><br></br>
+        <Link to="events">events</Link><br></br>
+        <Link to="products">products</Link><br></br>
         <Link to="contact">contact</Link>
       </nav>
     </div>
@@ -20,6 +20,8 @@ export function About() {
   return (
     <div>
       <h1>[About]</h1>
+
+
     </div>
   )
 }

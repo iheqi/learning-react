@@ -1,4 +1,5 @@
 import Star from "./Star";
+import StateDemo from "./components/StateDemo";
 import { Routes, Route } from "react-router-dom";
 
 import {
@@ -14,6 +15,7 @@ import {
 function App() {
   return (
     <div className="App">
+      <StateDemo />
       <Routes>
         <Route
           path="/"
