@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export function Home() {
+
+  const [state, setState] = useState(0);
+
+  // useLayoutEffect 执行时机，DOM树布局之后，浏览器渲染之前。
+  useLayoutEffect(() => {
+    const div = document.getElementById('div');
+    console.log(div.innerHTML);
+
+    const start = Date.now();
+    while (Date.now() - start < 15000) {
+
+    }
+    console.log("15秒过去了");
+  })
+
+  useEffect(() => {
+    console.log('useEffect');
+  })
+
   return (
     <div>
-      <h1>[Company Website]</h1>
-      <nav>
-        <Link to="about">about</Link><br></br>
-        <Link to="events">events</Link><br></br>
-        <Link to="products">products</Link><br></br>
-        <Link to="contact">contact</Link>
-      </nav>
+      <div id='div'>{state}</div>
+      <div>
+        <button onClick={() => setState(1)}>setState</button>
+      </div>
     </div>
   )
 }
