@@ -3,6 +3,7 @@ import WordCount from "./components/WordCount";
 import User from "./components/User";
 import Cat from "./components/Cat";
 import List from "./components/List";
+import { Counter } from './features/counter/Counter'
 
 import { FixedSizeList } from "react-window";
 
@@ -98,14 +99,15 @@ function App() {
 
       {/* <List data={bigList} renderItem={renderItem} renderEmpty={<p>This list is empty.</p>}></List> */}
 
-      <FixedSizeList
+      {/* <FixedSizeList
         height={window.innerHeight}
         width={window.innerWidth - 20}
         itemCount={bigList.length}
         itemSize={50}
       >
         {renderRow}
-      </FixedSizeList>
+      </FixedSizeList> */}
+      <Counter />
     </div>
   );
 }
