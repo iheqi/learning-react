@@ -58,6 +58,9 @@ function commitWork(fiber) {
       parentDom.appendChild(fiber.stateNode);
     }
   } else if (fiber.flag === 'Update') {
+    if (typeof fiber.element === 'string' || !fiber?.element?.props) {
+      return;
+    }
     const { children, ...newAttributes } = fiber.element.props;
     const oldAttributes = Object.assign({}, fiber.alternate.element.props);
     delete oldAttributes.children;

@@ -15,8 +15,7 @@ export function renderDom(element) {
 
   if (!element && element !== 0) {
     // 条件渲染为假，返回 null
-    // return null;
-    return document.createDocumentFragment();
+    return null;
   }
 
   if (typeof element === 'string') {
@@ -30,21 +29,6 @@ export function renderDom(element) {
     dom = document.createTextNode(String(element));
     return dom;
   }
-
-  // if (Array.isArray(element)) {
-  //   console.log("element", element);
-  //   // 列表渲染
-  //   dom = document.createDocumentFragment();
-  //   for (let item of element) {
-  //     const child = renderDom(item);
-
-  //     if (child !== null) {
-  //       dom.appendChild(child);
-  //     }
-
-  //   }
-  //   return dom;
-  // }
 
   const {
     type,
@@ -60,15 +44,6 @@ export function renderDom(element) {
     // 其他情况暂不考虑
     return null
   }
-
-  // if (children) {
-  //   // children 存在，对子节点递归渲染
-  //   const childrenDom = renderDom(children);
-  //   if (childrenDom) {
-  //     dom.appendChild(childrenDom);
-  //   }
-  // }
-
 
   updateAttributes(dom, attributes);
   return dom;
