@@ -10,7 +10,7 @@ function render(element, container) {
 // 将 React.Element 渲染为真实 dom
 // 这里不进行深度遍历来创建所有dom，而是只创建当前dom
 // 深度遍历将放到 performUnitOfWork 中，随着fiber的遍历而调用renderDom来创建当前dom
-function renderDom(element) {
+export function renderDom(element) {
   let dom = null; // 要返回的 dom
 
   if (!element && element !== 0) {

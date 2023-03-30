@@ -40,6 +40,7 @@ function performUnitOfWork(workInProgress) {
   }
 
   // 2.深度遍历创建子fiber，构建fiber树
+  // console.log("rootFiber", rootFiber, workInProgress);
 
   let children = workInProgress.element?.props?.children;
   let type = workInProgress.element?.type;
@@ -67,7 +68,7 @@ function performUnitOfWork(workInProgress) {
 
     while (index < elements.length) {
       const element = elements[index];
-      const newFiber = { // 深度遍历创建fiber
+      const newFiber = { // 迭代遍历创建子元素的fiber
         element,
         stateNode: null, // 此时还未创建dom，后面会设置 workInProgress.child 作为下一个工作单元
         return: workInProgress // 指向父fiber
@@ -108,3 +109,17 @@ function performUnitOfWork(workInProgress) {
   }
 
 }
+
+// packages/scheduler/src/Scheduler.js 
+
+function workLoop(deadline) {
+  let shouldYield = false;
+  while (nextUnitOfWork && !shouldYield) {
+    // 循环执行工作单元任务
+    performUnitOfWork(nextUnitOfWork);
+    shouldYield = deadline.timeRemaining() < 1;
+  }
+  requestIdleCallback(workLoop);
+}
+
+requestIdleCallback(workLoop);
