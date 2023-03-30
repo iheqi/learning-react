@@ -1,6 +1,6 @@
 import { renderDom } from './react-dom';
 import { commitRoot } from './commit';
-
+import { reconcileChildren } from './reconciler';
 // 深度优先遍历去进行迭代处理任务单元及 fiber，所以我们需要一个全局的 nextUnitOfWork 变量，
 // 作为下一个要处理的任务单元。
 let nextUnitOfWork = null;
@@ -75,26 +75,8 @@ function performUnitOfWork(workInProgress) {
     let elements = Array.isArray(children) ? children : [children];
     elements = elements.flat();
 
-    let index = 0;
-    let prevSibling = null;
-
-    while (index < elements.length) {
-      const element = elements[index];
-      const newFiber = { // 迭代遍历创建子元素的fiber
-        element,
-        stateNode: null, // 此时还未创建dom，后面会设置 workInProgress.child 作为下一个工作单元
-        return: workInProgress // 指向父fiber
-      }
-
-      if (index === 0) {
-        workInProgress.child = newFiber;
-      } else {
-        prevSibling.sibling = newFiber;
-      }
-
-      prevSibling = newFiber;
-      index++;
-    }
+    // diff
+    reconcileChildren(workInProgress, elements);
 
   }
 
