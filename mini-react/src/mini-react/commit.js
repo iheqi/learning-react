@@ -36,8 +36,16 @@ function commitWork(fiber) {
   commitWork(fiber.child);
   let parentDom = fiber.return.stateNode;
 
-  if (fiber.stateNode === null) {
-    console.log(fiber);
+  if (fiber.flag === 'Placement') {
+    const targetPositionDom = parentDom.childNodes[fiber.index];
+
+    if (targetPositionDom) {
+      // targetPositionDom 存在，则插入
+      parentDom.insertBefore(fiber.stateNode, targetPositionDom);
+    } else {
+      // targetPositionDom 不存在，插入到最后
+      parentDom.appendChild(fiber.stateNode);
+    }
   }
 
   parentDom.appendChild(fiber.stateNode);

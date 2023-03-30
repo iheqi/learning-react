@@ -1,7 +1,7 @@
 import { deleteFiber } from './fiber';
 
 // 将 performUnitOfWork 函数中的构造 fiber 树逻辑迁移到该函数中
-// 与之前的逻辑相比，就是diff后打 flag 标签
+// 与之前的逻辑相比，就是diff后打 flag 标签，后续commit时要依据flag来操作dom
 
 export function reconcileChildren(workInProgress, elements) {
   let index = 0; // 当前遍历的子元素在父节点下的下标
