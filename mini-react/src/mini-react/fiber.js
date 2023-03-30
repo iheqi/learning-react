@@ -1,6 +1,7 @@
 import { renderDom } from './react-dom';
 import { commitRoot } from './commit';
 import { reconcileChildren } from './reconciler';
+
 // 深度优先遍历去进行迭代处理任务单元及 fiber，所以我们需要一个全局的 nextUnitOfWork 变量，
 // 作为下一个要处理的任务单元。
 let nextUnitOfWork = null;
@@ -127,3 +128,11 @@ function workLoop(deadline) {
 }
 
 requestIdleCallback(workLoop);
+
+
+let deletions = []; // 要执行删除 dom 的 fiber
+
+// 将某个 fiber 加入 deletions 数组
+export function deleteFiber(fiber) {
+  deletions.push(fiber);
+}
