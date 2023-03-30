@@ -24,9 +24,14 @@
 // 等到所有的工作单元全部处理完成之后，再在 commit 阶段同步执行 dom 的挂载。
 
 import { updateAttributes } from './react-dom';
+import { getDeletions } from './fiber';
 
-export function commitRoot(workInProgressRoot) {
-  commitWork(workInProgressRoot.child);
+export function commitRoot(rootFiber) {
+  // 删除操作
+  const deletions = getDeletions();
+  deletions.forEach(commitWork);
+
+  commitWork(rootFiber.child);
 }
 
 function commitWork(fiber) {
@@ -58,9 +63,6 @@ function commitWork(fiber) {
       parentDom.appendChild(fiber.stateNode);
     }
   } else if (fiber.flag === 'Update') {
-    if (typeof fiber.element === 'string' || !fiber?.element?.props) {
-      return;
-    }
     const { children, ...newAttributes } = fiber.element.props;
     const oldAttributes = Object.assign({}, fiber.alternate.element.props);
     delete oldAttributes.children;

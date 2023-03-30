@@ -17,21 +17,8 @@ export function reconcileChildren(workInProgress, elements) {
       oldFiber?.element?.type &&
       element.type === oldFiber.element.type;
 
-    if (typeof element === 'string' && typeof oldFiber?.element === 'string') {
-      isSameType = true
-    }
-
-    // if (!isSameType) {
-    //   console.log('fuck');
-    // }
     // 创建新的 fiber
-    // 原代码初始化为null，但走下去可能报错
     let newFiber = null;
-    // let newFiber = {
-    //   element,
-    //   stateNode: null,
-    //   return: workInProgress // 指向父fiber
-    // }
 
     // 添加 flag 副作用
     if (isSameType) {

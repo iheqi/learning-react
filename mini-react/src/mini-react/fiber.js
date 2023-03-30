@@ -1,5 +1,5 @@
 import { renderDom } from './react-dom';
-import { commitRoot } from './commit';
+import { commitRoot } from './commit.js';
 import { reconcileChildren } from './reconciler';
 
 // 深度优先遍历去进行迭代处理任务单元及 fiber，所以我们需要一个全局的 nextUnitOfWork 变量，
@@ -75,10 +75,8 @@ function performUnitOfWork(workInProgress) {
   if (children || children === 0) {
     let elements = Array.isArray(children) ? children : [children];
     elements = elements.flat();
-
     // diff
     reconcileChildren(workInProgress, elements);
-
   }
 
   // 3.设置下一个工作单元
@@ -122,6 +120,7 @@ function workLoop(deadline) {
     commitRoot(workInProgressRoot);
     currentRoot = workInProgressRoot;
     workInProgressRoot = null;
+    deletions = [];
   }
 
   requestIdleCallback(workLoop);

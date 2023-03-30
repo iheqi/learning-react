@@ -89,4 +89,4 @@ setTimeout(() => {
   );
 
   ReactDOM.render(jsx, document.getElementById('root'));
-}, 3000);
+}, 2000);
