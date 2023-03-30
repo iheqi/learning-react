@@ -34,8 +34,18 @@ function commitWork(fiber) {
     return;
   }
 
-  commitWork(fiber.child);
   let parentDom = fiber.return.stateNode;
+
+  // 对于删除 dom，我们只要对 deletions 数组遍历一遍执行删除动作即可，删除完毕直接 return
+  if (fiber.flag === 'Deletion') {
+    if (typeof fiber.element?.type !== 'function') {
+      parentDom.removeChild(fiber.stateNode);
+    }
+    return;
+  }
+
+  // 深度优先遍历，先遍历 child，后遍历 sibling
+  commitWork(fiber.child);
 
   if (fiber.flag === 'Placement') {
     const targetPositionDom = parentDom.childNodes[fiber.index];

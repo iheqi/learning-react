@@ -130,9 +130,19 @@ function workLoop(deadline) {
 requestIdleCallback(workLoop);
 
 
+// 1.对于打上了 Deletion flag 的 fiber，说明是在之前 current fiber 树中有，
+//   但是 workInProgress fiber 树中没有的，那么我们在 workInProgress fiber 树中遍历是找不到它的。
+// 2.要删除的元素，只需要从它的父节点上直接删除它就行，不需要再去遍历整个 fiber 树 所以基于以上两点，
+//   我们需要一个全局的 deletions 数组，存储所有要删除 dom 的对应 fiber。
+
 let deletions = []; // 要执行删除 dom 的 fiber
 
 // 将某个 fiber 加入 deletions 数组
 export function deleteFiber(fiber) {
   deletions.push(fiber);
+}
+
+// 获取 deletions 数组
+export function getDeletions() {
+  return deletions;
 }

@@ -55,4 +55,5 @@ const jsx = (
   </div>
 );
 
-ReactDOM.render(jsx, document.getElementById('root')); 
+ReactDOM.render(jsx, document.getElementById('root'));
+
