@@ -24,8 +24,8 @@
 // 等到所有的工作单元全部处理完成之后，再在 commit 阶段同步执行 dom 的挂载。
 
 
-export function commitRoot(rootFiber) {
-  commitWork(rootFiber.child);
+export function commitRoot(workInProgressRoot) {
+  commitWork(workInProgressRoot.child);
 }
 
 function commitWork(fiber) {

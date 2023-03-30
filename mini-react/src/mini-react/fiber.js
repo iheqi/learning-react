@@ -5,22 +5,25 @@ import { commitRoot } from './commit';
 // 作为下一个要处理的任务单元。
 let nextUnitOfWork = null;
 
-//  fiber 的迭代是从 root fiber 开始的，
-// 因此我们需要根据 ReactDOM.render 接收的 element 和 container 参数，创建一个 rootFiber
-let rootFiber = null;
+//  fiber 的迭代是从 rootFiber 开始的，
+// 因此我们需要根据 ReactDOM.render 接收的 element 和 container 参数，创建一个 workInProgressRoot
+let workInProgressRoot = null; // 当前工作的 fiber 树
+let currentRoot = null; // 上一次渲染的 fiber 树
 
-// 创建 rootFiber 作为首个 nextUnitOfWork
+
+// 创建 workInProgressRoot 作为首个 nextUnitOfWork
 export function createRoot(element, container) {
-  rootFiber = {
+  workInProgressRoot = {
     stateNode: container, // 记录对应的真实 dom 节点
     element: {            // element 指向 fiber 所对应的 React.element
       props: {
         children: [element],
       }
-    }
+    },
+    alternate: currentRoot
   }
 
-  nextUnitOfWork = rootFiber;
+  nextUnitOfWork = workInProgressRoot;
 }
 
 // 执行当前工作单元并设置下一个要执行的工作单元
@@ -47,7 +50,7 @@ function performUnitOfWork(workInProgress) {
   // }
 
   // 2.深度遍历创建子fiber，构建fiber树
-  // console.log("rootFiber", rootFiber, workInProgress);
+  // console.log("workInProgressRoot", workInProgressRoot, workInProgress);
 
   let children = workInProgress.element?.props?.children;
   let type = workInProgress.element?.type;
@@ -129,12 +132,13 @@ function workLoop(deadline) {
     shouldYield = deadline.timeRemaining() < 1;
   }
 
-  // 在 workLoop 中，当 nextUnitOfWork 为 null 且 rootFiber 存在时，
+  // 在 workLoop 中，当 nextUnitOfWork 为 null 且 workInProgressRoot 存在时，
   // 表示 render 阶段执行结束，开始调用 commitRoot 函数进入 commit 阶段
-  if (!nextUnitOfWork && rootFiber) {
+  if (!nextUnitOfWork && workInProgressRoot) {
     // 表示进入 commit 阶段
-    commitRoot(rootFiber);
-    rootFiber = null;
+    commitRoot(workInProgressRoot);
+    currentRoot = workInProgressRoot;
+    workInProgressRoot = null;
   }
 
   requestIdleCallback(workLoop);
