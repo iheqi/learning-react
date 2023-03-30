@@ -23,6 +23,7 @@
 // 这就要分成 react 的 render 和 commit 阶段，我们在 render 阶段去只处理工作单元，创建 dom 但是不挂载 dom，
 // 等到所有的工作单元全部处理完成之后，再在 commit 阶段同步执行 dom 的挂载。
 
+import { updateAttributes } from './react-dom';
 
 export function commitRoot(workInProgressRoot) {
   commitWork(workInProgressRoot.child);
@@ -46,8 +47,14 @@ function commitWork(fiber) {
       // targetPositionDom 不存在，插入到最后
       parentDom.appendChild(fiber.stateNode);
     }
+  } else if (fiber.flag === 'Update') {
+    const { children, ...newAttributes } = fiber.element.props;
+    const oldAttributes = Object.assign({}, fiber.alternate.element.props);
+    delete oldAttributes.children;
+
+    updateAttributes(fiber.stateNode, newAttributes, oldAttributes);
   }
 
-  parentDom.appendChild(fiber.stateNode);
+  // parentDom.appendChild(fiber.stateNode);
   commitWork(fiber.sibling);
 }
