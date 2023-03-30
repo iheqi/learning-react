@@ -1,4 +1,5 @@
 import { renderDom } from './react-dom';
+import { commitRoot } from './commit';
 
 // 深度优先遍历去进行迭代处理任务单元及 fiber，所以我们需要一个全局的 nextUnitOfWork 变量，
 // 作为下一个要处理的任务单元。
@@ -29,15 +30,21 @@ function performUnitOfWork(workInProgress) {
     workInProgress.stateNode = renderDom(workInProgress.element);
   }
 
-  if (workInProgress.return && workInProgress.stateNode) {
-    let parentFiber = workInProgress.return;
+  // render 和 commit 分离。在 render 阶段去只处理工作单元，创建 dom 但是不挂载 dom，
+  // 等到所有的工作单元全部处理完成之后，再在 commit 阶段同步执行 dom 的挂载。
 
-    while (!parentFiber.stateNode) {
-      parentFiber = parentFiber.return;
-    }
+  // if (workInProgress.return && workInProgress.stateNode) {
+  //   let parentFiber = workInProgress.return;
 
-    parentFiber.stateNode.appendChild(workInProgress.stateNode);
-  }
+  //   // 什么情况下直接父组件stateNode还没创建好？
+  //   // 比如 <ClassComponent value={666} />，其子组件为render的返回值，其本身就是个类似Fragment的套壳（renderDom返回stateNode为null）
+  //   // 父组件为div.deep1-box。所以子组件直接找到div.deep1-box进行挂载。
+  //   while (!parentFiber.stateNode) {
+  //     parentFiber = parentFiber.return;
+  //   }
+
+  //   parentFiber.stateNode.appendChild(workInProgress.stateNode);
+  // }
 
   // 2.深度遍历创建子fiber，构建fiber树
   // console.log("rootFiber", rootFiber, workInProgress);
@@ -46,7 +53,9 @@ function performUnitOfWork(workInProgress) {
   let type = workInProgress.element?.type;
 
   if (typeof type === 'function') {
+    // 当前 fiber 对应 React 组件时，对其 return 迭代
     if (type.prototype.isReactComponent) {
+      // 类组件，通过生成的类实例的 render 方法返回 jsx
       const { props, type: Comp } = workInProgress.element;
       const component = new Comp(props);
       const jsx = component.render();
@@ -119,6 +128,15 @@ function workLoop(deadline) {
     performUnitOfWork(nextUnitOfWork);
     shouldYield = deadline.timeRemaining() < 1;
   }
+
+  // 在 workLoop 中，当 nextUnitOfWork 为 null 且 rootFiber 存在时，
+  // 表示 render 阶段执行结束，开始调用 commitRoot 函数进入 commit 阶段
+  if (!nextUnitOfWork && rootFiber) {
+    // 表示进入 commit 阶段
+    commitRoot(rootFiber);
+    rootFiber = null;
+  }
+
   requestIdleCallback(workLoop);
 }
 

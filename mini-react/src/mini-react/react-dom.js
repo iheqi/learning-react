@@ -15,7 +15,8 @@ export function renderDom(element) {
 
   if (!element && element !== 0) {
     // 条件渲染为假，返回 null
-    return null;
+    // return null;
+    return document.createDocumentFragment();
   }
 
   if (typeof element === 'string') {
@@ -53,20 +54,8 @@ export function renderDom(element) {
   if (typeof type === 'string') {
     // 常规 dom 节点的渲染
     dom = document.createElement(type);
-    // } else if (typeof type === 'function') {
-    //   // React组件的渲染
-    //   if (type.prototype.isReactComponent) {
-    //     // 类组件
-    //     const { props, type: Comp } = element;
-    //     const component = new Comp(props);
-    //     const jsx = component.render();
-    //     dom = renderDom(jsx);
-    //   } else {
-    //     // 函数组件
-    //     const { props, type: Fn } = element;
-    //     const jsx = Fn(props);
-    //     dom = renderDom(jsx);
-    //   }
+  } else if (typeof type === 'function') {
+    dom = document.createDocumentFragment();
   } else {
     // 其他情况暂不考虑
     return null
