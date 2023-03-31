@@ -139,7 +139,7 @@ function updateFunctionComponent(fiber) {
   hookIndex = 0;
   const { props, type: Fn } = fiber.element;
   const jsx = Fn(props);
-  reconcileChildren(fiber, jsx);
+  reconcileChildren(fiber, [jsx]);
 }
 
 
