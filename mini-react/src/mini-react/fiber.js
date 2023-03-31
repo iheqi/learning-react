@@ -11,6 +11,18 @@ let nextUnitOfWork = null;
 let workInProgressRoot = null; // 当前工作的 fiber 树
 let currentRoot = null; // 上一次渲染的 fiber 树
 
+let currentFunctionFiber = null; // 当前正在执行的函数组件对应 fiber
+let hookIndex = 0; //  当前正在执行的函数组件 hook 的下标
+
+// 获取当前的执行的函数组件对应的 fiber
+export function getCurrentFunctionFiber() {
+  return currentFunctionFiber;
+}
+
+// 获取当前 hook 下标
+export function getHookIndex() {
+  return hookIndex++;
+}
 
 // 创建 workInProgressRoot 作为首个 nextUnitOfWork
 export function createRoot(element, container) {
@@ -59,13 +71,14 @@ function performUnitOfWork(workInProgress) {
   if (typeof type === 'function') {
     // 当前 fiber 对应 React 组件时，对其 return 迭代
     if (type.prototype.isReactComponent) {
-      // 类组件，通过生成的类实例的 render 方法返回 jsx
+      // 类组件
       updateClassComponent(workInProgress);
     } else {
-      // 函数组件，直接调用函数返回 jsx
-      const { props, type: Fn } = workInProgress.element;
-      const jsx = Fn(props);
-      children = [jsx];
+      // 函数组件
+      updateFunctionComponent(workInProgress);
+      // const { props, type: Fn } = workInProgress.element;
+      // const jsx = Fn(props);
+      // children = [jsx];
     }
   }
 
@@ -116,6 +129,17 @@ function updateClassComponent(fiber) {
   }
 
   reconcileChildren(fiber, [jsx]);
+}
+
+
+function updateFunctionComponent(fiber) {
+  currentFunctionFiber = fiber;
+  currentFunctionFiber.hooks = [];
+
+  hookIndex = 0;
+  const { props, type: Fn } = fiber.element;
+  const jsx = Fn(props);
+  reconcileChildren(fiber, jsx);
 }
 
 
