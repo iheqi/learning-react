@@ -60,10 +60,7 @@ function performUnitOfWork(workInProgress) {
     // 当前 fiber 对应 React 组件时，对其 return 迭代
     if (type.prototype.isReactComponent) {
       // 类组件，通过生成的类实例的 render 方法返回 jsx
-      const { props, type: Comp } = workInProgress.element;
-      const component = new Comp(props);
-      const jsx = component.render();
-      children = [jsx];
+      updateClassComponent(workInProgress);
     } else {
       // 函数组件，直接调用函数返回 jsx
       const { props, type: Fn } = workInProgress.element;
@@ -102,6 +99,25 @@ function performUnitOfWork(workInProgress) {
   }
 
 }
+
+// 类组件的渲染逻辑
+function updateClassComponent(fiber) {
+  let jsx;
+  if (fiber.alternate) {
+    const component = fiber.alternate.component;
+    fiber.component = component;
+    component._UpdateProps(fiber.element.props);
+    jsx = component.render();
+  } else {
+    const { props, type: Comp } = fiber.element;
+    const component = new Comp(props);
+    fiber.component = component;
+    jsx = component.render();
+  }
+
+  reconcileChildren(fiber, [jsx]);
+}
+
 
 // packages/scheduler/src/Scheduler.js 
 
@@ -144,4 +160,19 @@ export function deleteFiber(fiber) {
 // 获取 deletions 数组
 export function getDeletions() {
   return deletions;
+}
+
+
+// setState 中调用 commitRender 函数去触发更新
+export function commitRender() {
+  // 将当前的 currentRoot 作为 workInProgressRoot，并将 nextUnitOfWork 指向它，去触发 render
+  // (从 currentRoot 开始，所以说是全量Diff)
+
+  workInProgressRoot = {
+    stateNode: currentRoot.stateNode,
+    element: currentRoot.element,
+    alternate: currentRoot
+  }
+
+  nextUnitOfWork = workInProgressRoot;
 }
